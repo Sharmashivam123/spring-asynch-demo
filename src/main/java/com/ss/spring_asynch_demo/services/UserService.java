@@ -18,6 +18,12 @@ public class UserService {
     public CompletableFuture<UserInformationResponse> getUserInformation(String userId) {
         log.info("Fetching user information for user ID: {}", userId);
 
-        return CompletableFuture.supplyAsync(() -> restClient.getUserInformation(userId));
+        return CompletableFuture.supplyAsync(() -> restClient.getUserInformation(userId)).handle((result, ex)->{
+            if(ex != null) {
+                log.error("Error fetching user information for user ID: {}", userId, ex);
+                return new UserInformationResponse();
+            }
+            return result;
+        });
     }
 }

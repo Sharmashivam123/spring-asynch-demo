@@ -14,4 +14,8 @@ public record UserInformationResponse(
         this.email = email;
         this.phoneNumber = phoneNumber;
     }
+    public UserInformationResponse() {
+
+        this(null, null, null, null, null);
+    }
 }

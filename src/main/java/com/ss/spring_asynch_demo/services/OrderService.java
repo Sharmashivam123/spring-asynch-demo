@@ -19,6 +19,10 @@ public class OrderService {
     public CompletableFuture<List<OrderResponse>> getOrdersByUserId(String userId) {
         log.info("Fetching order information for user ID: {}", userId);
 
-        return CompletableFuture.supplyAsync(() -> restClient.getOrdersByUserId(userId));
+        return CompletableFuture.supplyAsync(() -> restClient.getOrdersByUserId(userId)).exceptionallyCompose((ex)-> {
+            log.error("Error fetching orders for user ID: {}", userId, ex);
+
+            return CompletableFuture.completedFuture(List.of());
+        });
     }
 }
