@@ -5,9 +5,8 @@ import com.ss.spring_asynch_demo.records.UserInformationResponse;
 import com.ss.spring_asynch_demo.records.UserProfileResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Service
 @AllArgsConstructor
@@ -16,12 +15,11 @@ public class UserProfileService {
     private final OrderService orderService;
 
     // Method to get user profile details
-    public UserProfileResponse getUserProfile(String userId) {
-        CompletableFuture<UserInformationResponse> user = userService.getUserInformation(userId);
-        CompletableFuture<List<OrderResponse>> orders = orderService.getOrdersByUserId(userId);
+    public Mono<UserProfileResponse> getUserProfile(String userId) {
+        Mono<UserInformationResponse> user = userService.getUserInformation(userId);
+        Flux<OrderResponse> orders = orderService.getOrdersByUserId(userId);
 
 
-        return CompletableFuture.allOf(user, orders)
-                .thenApplyAsync(v -> new UserProfileResponse(user.join(), orders.join())).join();
+        return Mono.zip(user, orders.collectList(), UserProfileResponse::new);
     }
 }

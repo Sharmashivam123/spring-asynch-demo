@@ -1,29 +1,22 @@
 package com.ss.spring_asynch_demo.services;
 
-import com.ss.spring_asynch_demo.client.RestClient;
+import com.ss.spring_asynch_demo.client.UserServiceClient;
 import com.ss.spring_asynch_demo.records.UserInformationResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.concurrent.CompletableFuture;
+import reactor.core.publisher.Mono;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class UserService {
 
-    private final RestClient restClient;
+    private final UserServiceClient userServiceClient;
 
-    public CompletableFuture<UserInformationResponse> getUserInformation(String userId) {
+    public Mono<UserInformationResponse> getUserInformation(String userId) {
         log.info("Fetching user information for user ID: {}", userId);
 
-        return CompletableFuture.supplyAsync(() -> restClient.getUserInformation(userId)).handle((result, ex)->{
-            if(ex != null) {
-                log.error("Error fetching user information for user ID: {}", userId, ex);
-                return new UserInformationResponse();
-            }
-            return result;
-        });
+        return userServiceClient.getUserInformation(userId);
     }
 }
