@@ -1,4 +1,4 @@
-package com.ss.spring_asynch_demo.constants;
+package com.ss.spring_asynch_demo.utils.constants;
 
 public class AppConstants {
     public static final String USER_ID = "userId";
@@ -11,6 +11,6 @@ public class AppConstants {
     public static final String ORDERS_BY_USER_ID_URI = "/orders/user/{userId}";
 
     private AppConstants() {
-        // Private constructor to prevent instantiation
+
     }
 }

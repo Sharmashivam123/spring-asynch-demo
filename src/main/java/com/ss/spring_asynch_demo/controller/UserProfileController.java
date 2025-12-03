@@ -2,6 +2,7 @@ package com.ss.spring_asynch_demo.controller;
 
 import com.ss.spring_asynch_demo.records.UserProfileResponse;
 import com.ss.spring_asynch_demo.services.UserProfileService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import reactor.core.publisher.Mono;
 @RestController
 @RequestMapping("/user-profile")
 @AllArgsConstructor
+@RateLimiter(name = "user-profile-rate-limiter", fallbackMethod = "getUserProfileFallback")
 @Slf4j
 public class UserProfileController {
 
@@ -25,5 +27,10 @@ public class UserProfileController {
         log.info("User profile fetched successfully for user ID: {}", userid);
 
         return userProfileResponse;
+    }
+
+    private Mono<UserProfileResponse> getUserProfileFallback(String userid, Throwable throwable) {
+        log.error("Rate limit exceeded for user ID: {}. Returning fallback response.", userid);
+        return Mono.empty();
     }
 }

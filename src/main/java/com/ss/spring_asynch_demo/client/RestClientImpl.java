@@ -9,8 +9,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-import static com.ss.spring_asynch_demo.constants.AppConstants.ORDERS_BY_USER_ID_URI;
-import static com.ss.spring_asynch_demo.constants.AppConstants.USER_INFO_URI;
+import static com.ss.spring_asynch_demo.utils.constants.AppConstants.ORDERS_BY_USER_ID_URI;
+import static com.ss.spring_asynch_demo.utils.constants.AppConstants.USER_INFO_URI;
 
 @Service
 @AllArgsConstructor

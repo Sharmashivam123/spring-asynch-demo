@@ -1,0 +1,59 @@
+spring:
+  application:
+    name: api-gateway
+
+server:
+  port: 8080
+
+discovery:
+  user-service-url: http://localhost:8082
+  order-service-url: http://localhost:8081
+  user-service: user-service
+  order-service: order-service
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      order-service-circuit-breaker:
+        registerHealthIndication: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 20
+        waitDurationInOpenState: 60000
+        permittedNumberOfCallsInHalfOpenState: 3
+        eventConsumerBufferSize: 10
+        slidinqWindowType: COUNT_BASED
+  retry:
+    instances:
+      order-service-retry:
+        maxRetryAttempts: 3
+        waitDuration: 9s
+  timelimiter:
+    instances:
+      order-service-timeout:
+        timeoutDuration: 30s
+  rateLimiter:
+    instances:
+      user-profile-rate-limiter:
+        limitForPeriod: 1
+        limitRefreshPeriod: 1s
+        timeoutDuration: 500ms
+
+management:
+  health:
+    resilience4j:
+      enabled: true
+    circuitbreakers:
+      order-service-circuit-breaker:
+        enabled: true
+      enabled: true
+    metrics:
+      order-service-circuit-breaker:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,beans,env,resilience4j
+  endpoint:
+    health:
+      show-details: always
