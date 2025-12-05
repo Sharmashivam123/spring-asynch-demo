@@ -22,7 +22,7 @@ resilience4j:
         waitDurationInOpenState: 60000
         permittedNumberOfCallsInHalfOpenState: 3
         eventConsumerBufferSize: 10
-        slidinqWindowType: COUNT_BASED
+        slidingWindowType: COUNT_BASED
   retry:
     instances:
       order-service-retry:
@@ -32,12 +32,16 @@ resilience4j:
     instances:
       order-service-timeout:
         timeoutDuration: 30s
-  rateLimiter:
+  ratelimiter:
     instances:
       user-profile-rate-limiter:
         limitForPeriod: 1
         limitRefreshPeriod: 1s
         timeoutDuration: 500ms
+      order-processor-rate-limiter:
+        limitForPeriod: 1
+        limitRefreshPeriod: 1s
+        timeoutDuration: 0ms
 
 management:
   health:
@@ -57,3 +61,9 @@ management:
   endpoint:
     health:
       show-details: always
+
+logging:
+  level:
+    io.github.resilience4j: DEBUG
+    io.micrometer: DEBUG
+    org.springframework.boot.actuate.metrics: DEBUG

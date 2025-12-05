@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import static com.ss.spring_asynch_demo.utils.constants.AppConstants.ORDERS_BY_USER_ID_URI;
 
@@ -42,5 +43,14 @@ public class OrderServiceClient {
     private Flux<OrderResponse> getOrdersFallbackRetry(String userId, Throwable throwable) {
         log.error("Retry attempts exhausted for user ID: {}. Returning empty list.", userId);
         return Flux.empty();
+    }
+
+    public Mono<String> processOrder(String orderId) {
+        String url = discoveryApplicationProperties.getOrderServiceUrl() + "/process/{orderId}";
+
+        return webClient.post()
+                .uri(url, orderId)
+                .retrieve()
+                .bodyToMono(String.class);
     }
 }
