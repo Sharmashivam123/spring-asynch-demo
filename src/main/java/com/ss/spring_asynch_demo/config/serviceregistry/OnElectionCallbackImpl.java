@@ -1,8 +1,10 @@
 package com.ss.spring_asynch_demo.config.serviceregistry;
 
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Service
 public class OnElectionCallbackImpl implements OnElectionCallback {
@@ -23,7 +25,9 @@ public class OnElectionCallbackImpl implements OnElectionCallback {
     }
 
     @Override
-    public void onRevokedLeadership() {
-        serviceRegistry.registerToCluster("localhost:" + serverPort);
+    public void onRevokedLeadership() throws UnknownHostException {
+        String serviceAddress = String.format("http://%s:%s",
+                InetAddress.getLocalHost().getCanonicalHostName(), serverPort);
+        serviceRegistry.registerToCluster(serviceAddress);
     }
 }

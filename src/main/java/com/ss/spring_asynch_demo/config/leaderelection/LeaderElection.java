@@ -1,4 +1,4 @@
-package com.ss.spring_asynch_demo.config;
+package com.ss.spring_asynch_demo.config.leaderelection;
 
 import com.ss.spring_asynch_demo.config.serviceregistry.OnElectionCallback;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +9,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class LeaderElection implements Watcher {
         this.currentZnodeName = znodePath.replace(ELECTION_NAMESPACE + "/", "");
     }
 
-    public void electLeader() throws KeeperException, InterruptedException {
+    public void electLeader() throws KeeperException, InterruptedException, UnknownHostException {
         // Implementation for leader election
         log.info("Electing leader...");
         Stat predecessorStat = null;
@@ -106,6 +107,8 @@ public class LeaderElection implements Watcher {
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 } catch (KeeperException e) {
+                    throw new RuntimeException(e);
+                } catch (UnknownHostException e) {
                     throw new RuntimeException(e);
                 }
                 log.info("Node deleted event received for path: " + event.getPath());

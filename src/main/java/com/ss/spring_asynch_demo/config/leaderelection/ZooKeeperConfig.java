@@ -1,4 +1,4 @@
-package com.ss.spring_asynch_demo.config;
+package com.ss.spring_asynch_demo.config.leaderelection;
 
 import jakarta.annotation.PreDestroy;
 import org.apache.zookeeper.WatchedEvent;
