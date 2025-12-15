@@ -19,7 +19,6 @@ public class UserProfileService {
         Mono<UserInformationResponse> user = userService.getUserInformation(userId);
         Flux<OrderResponse> orders = orderService.getOrdersByUserId(userId);
 
-
         return Mono.zip(user, orders.collectList(), UserProfileResponse::new);
     }
 }

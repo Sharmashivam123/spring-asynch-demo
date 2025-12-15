@@ -3,7 +3,7 @@ spring:
     name: api-gateway
 
 server:
-  port: 8080
+  port: 8085
 
 discovery:
   user-service-url: http://localhost:8082
@@ -64,6 +64,7 @@ management:
 
 logging:
   level:
+    root: INFO
     io.github.resilience4j: DEBUG
     io.micrometer: DEBUG
     org.springframework.boot.actuate.metrics: DEBUG

@@ -26,7 +26,7 @@ class AsyncControllerTest {
         String result = controller.sendNotification(request);
 
         // Assert
-        verify(asyncService, times(recipients.size())).sendNotification(request, anyInt());
+        verify(asyncService, times(recipients.size())).sendNotification(eq(request), anyInt());
         assertEquals("Notification sent successfully!", result);
     }
 }
