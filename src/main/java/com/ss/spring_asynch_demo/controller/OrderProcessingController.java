@@ -1,15 +1,14 @@
 package com.ss.spring_asynch_demo.controller;
 
+import com.ss.common_lib.requests.OrderProcessingRequest;
 import com.ss.spring_asynch_demo.services.OrderService;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/process")
@@ -19,11 +18,12 @@ public class OrderProcessingController {
 
     private OrderService orderService;
 
+    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
     @PostMapping("/{orderId}")
     @RateLimiter(name = "order-processor-rate-limiter", fallbackMethod = "orderProcessingRateLimiterFallback")
-    public ResponseEntity<ProcessorSuccessResponse> processRequest(@PathVariable String orderId) {
-        log.info("Processing request...");
-        orderService.processOrder(orderId);
+    public ResponseEntity<ProcessorSuccessResponse> processRequest(@PathVariable String orderId, @RequestBody OrderProcessingRequest orderProcessingRequest) {
+        log.info("Processing request...with details: {}", orderProcessingRequest.toString());
+        orderService.processOrder(orderId, orderProcessingRequest);
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {

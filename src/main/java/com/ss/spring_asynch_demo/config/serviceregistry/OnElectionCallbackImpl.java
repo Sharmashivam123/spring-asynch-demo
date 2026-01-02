@@ -1,3 +1,4 @@
+/*
 package com.ss.spring_asynch_demo.config.serviceregistry;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -31,3 +32,4 @@ public class OnElectionCallbackImpl implements OnElectionCallback {
         serviceRegistry.registerToCluster(serviceAddress);
     }
 }
+*/

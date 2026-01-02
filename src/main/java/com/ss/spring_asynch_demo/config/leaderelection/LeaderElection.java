@@ -1,3 +1,4 @@
+/*
 package com.ss.spring_asynch_demo.config.leaderelection;
 
 import com.ss.spring_asynch_demo.config.serviceregistry.OnElectionCallback;
@@ -33,7 +34,7 @@ public class LeaderElection implements Watcher {
         try {
             volunteerForLeaderShip();
             electLeader();
-            watchTargetZnode();
+//            watchTargetZnode();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,7 +74,8 @@ public class LeaderElection implements Watcher {
         }
     }
 
-    public void watchTargetZnode() throws InterruptedException, KeeperException {
+    */
+/*public void watchTargetZnode() throws InterruptedException, KeeperException {
         Stat stat = zk.exists(TARGET_ZNODE, this);
         if (stat == null) {
             log.info("Target znode does not exist");
@@ -85,7 +87,8 @@ public class LeaderElection implements Watcher {
             List<String> children = zk.getChildren(TARGET_ZNODE, this);
             log.info("Children of target znode: " + children);
         }
-    }
+    }*//*
+
 
     @Override
     public void process(WatchedEvent event) {
@@ -123,11 +126,6 @@ public class LeaderElection implements Watcher {
                 log.info("Node children changed event received for path: " + event.getPath());
                 break;
         }
-
-        try {
-            watchTargetZnode();
-        } catch (InterruptedException | KeeperException e) {
-            e.printStackTrace();
-        }
     }
 }
+*/

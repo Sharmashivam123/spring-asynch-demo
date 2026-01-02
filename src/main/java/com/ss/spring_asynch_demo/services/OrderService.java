@@ -1,7 +1,9 @@
 package com.ss.spring_asynch_demo.services;
 
+import com.ss.common_lib.requests.OrderProcessingRequest;
 import com.ss.spring_asynch_demo.client.OrderServiceClient;
 import com.ss.spring_asynch_demo.client.RestClient;
+import com.ss.spring_asynch_demo.events.OrderProducer;
 import com.ss.spring_asynch_demo.exceptions.OrderProcessingException;
 import com.ss.spring_asynch_demo.records.OrderResponse;
 import lombok.RequiredArgsConstructor;
@@ -9,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +19,7 @@ public class OrderService {
 
     private final RestClient restClient;
     private final OrderServiceClient orderServiceClient;
+    private final OrderProducer orderProducer;
 
     public Flux<OrderResponse> getOrdersByUserId(String userId) {
         log.info("Fetching order information for user ID: {}", userId);
@@ -26,10 +28,10 @@ public class OrderService {
     }
 
     @Async
-    public void processOrder(String orderId) {
+    public void processOrder(String orderId, OrderProcessingRequest orderProcessingRequest) {
         try {
             log.info("Processing order ID: {} by thread: {}", orderId, Thread.currentThread().getName());
-            Mono<String> response = orderServiceClient.processOrder(orderId);
+            /*Mono<String> response = orderServiceClient.processOrder(orderId);
 
             // Subscribe to the Mono so the WebClient request is actually executed.
             response.subscribe(
@@ -38,7 +40,8 @@ public class OrderService {
                         log.error("Unexpected error while processing order ID {}: {}", orderId, err.getMessage());
                         // Note: throwing inside subscriber won't propagate to the caller; log and handle as needed.
                     }
-            );
+            );*/
+            orderProducer.sendOrderProcessingEvent(orderId, orderProcessingRequest);
 
         } catch (Exception e) {
             log.error("Unexpected error while processing order ID {}: {}", orderId, e.getMessage());

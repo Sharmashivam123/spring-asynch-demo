@@ -2,6 +2,43 @@ spring:
   application:
     name: api-gateway
 
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:gatewaydb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 30000
+      pool-name: H2HikariCP
+      max-lifetime: 2000000
+      connection-timeout: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+
+
+  # KAFKA CONFIGURATION
+  kafka:
+    bootstrap-servers: localhost:9095,localhost:9096,localhost:9097
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      enable-idempotence: true
+      retries: 10
+      max.in-flight-requests-per-connection: 10
+      batch-size: 16384
+      linger-ms: 20
+      buffer-memory: 33554432
+
 server:
   port: 8085
 
@@ -68,3 +105,4 @@ logging:
     io.github.resilience4j: DEBUG
     io.micrometer: DEBUG
     org.springframework.boot.actuate.metrics: DEBUG
+    org.springframework.security: TRACE

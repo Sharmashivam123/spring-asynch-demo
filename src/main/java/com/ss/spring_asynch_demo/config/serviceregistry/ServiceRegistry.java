@@ -1,3 +1,4 @@
+/*
 package com.ss.spring_asynch_demo.config.serviceregistry;
 
 import lombok.extern.slf4j.Slf4j;
@@ -101,3 +102,4 @@ public class ServiceRegistry implements Watcher {
         updateServiceAddresses();
     }
 }
+*/
