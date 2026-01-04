@@ -18,7 +18,7 @@ public class OrderProcessingController {
 
     private OrderService orderService;
 
-    @PreAuthorize("hasAnyRole('ROLE_MANAGER', 'ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('READ', 'WRITE', 'USER')")
     @PostMapping("/{orderId}")
     @RateLimiter(name = "order-processor-rate-limiter", fallbackMethod = "orderProcessingRateLimiterFallback")
     public ResponseEntity<ProcessorSuccessResponse> processRequest(@PathVariable String orderId, @RequestBody OrderProcessingRequest orderProcessingRequest) {

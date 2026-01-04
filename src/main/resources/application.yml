@@ -39,6 +39,11 @@ spring:
       linger-ms: 20
       buffer-memory: 33554432
 
+  security:
+    jwt:
+      rsa-private-key: classpath:certs/privateKey.pem
+      rsa-public-key: classpath:certs/publicKey.pem
+
 server:
   port: 8085
 
@@ -106,3 +111,6 @@ logging:
     io.micrometer: DEBUG
     org.springframework.boot.actuate.metrics: DEBUG
     org.springframework.security: TRACE
+    com.zaxxer.hikari: DEBUG
+    com.zaxxer.hikari.HikariConfig: DEBUG
+    org.springframework.jdbc.datasource: DEBUG

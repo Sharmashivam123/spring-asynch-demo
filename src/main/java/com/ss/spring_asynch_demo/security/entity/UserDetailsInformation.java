@@ -29,7 +29,7 @@ public class UserDetailsInformation implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userInfoEntity.getUserName();
+        return userInfoEntity.getEmailId();
     }
 
     @Override
