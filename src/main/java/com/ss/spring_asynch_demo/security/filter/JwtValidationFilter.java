@@ -1,7 +1,7 @@
 package com.ss.spring_asynch_demo.security.filter;
 
-import com.ss.spring_asynch_demo.security.record.RSAKeyRecord;
-import com.ss.spring_asynch_demo.security.utils.JwtTokenUtility;
+import com.ss.spring_asynch_demo.security.entity.UserDetailsInformation;
+import com.ss.spring_asynch_demo.security.repo.UserInformationRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.UnavailableException;
@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -25,9 +25,7 @@ import java.util.List;
 @Component
 public class JwtValidationFilter extends OncePerRequestFilter {
 
-    private final RSAKeyRecord rsaKeyRecord;
-    private final JwtDecoder jwtDecoder;
-    private final JwtTokenUtility jwtTokenUtility;
+    private final UserInformationRepository userInformationRepository;
     private static final List<String> EXCLUDED_PATHS = List.of("/auth",
             "/h2-console");
 
@@ -47,8 +45,10 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
             Jwt jwt = jwtAuth.getToken();
 
-            String userName = jwtTokenUtility.getUserName(jwt);
-            UserDetails userDetails = jwtTokenUtility.getUserDetails(userName);
+            String userName = jwt.getSubject();
+            UserDetails userDetails = userInformationRepository.findByEmailId(userName)
+                    .map(UserDetailsInformation::new)
+                    .orElseThrow(() -> new UsernameNotFoundException("UserEmail: " + userName + "not found."));
 
             if (!userName.equals(userDetails.getUsername())) {
                 SecurityContextHolder.clearContext();

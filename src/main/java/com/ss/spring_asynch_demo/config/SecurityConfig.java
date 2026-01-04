@@ -6,7 +6,6 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import com.ss.spring_asynch_demo.security.filter.JwtValidationFilter;
 import com.ss.spring_asynch_demo.security.record.RSAKeyRecord;
 import com.ss.spring_asynch_demo.security.service.UserDetailsInformationService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,7 +29,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
-import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -41,7 +39,6 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final UserDetailsInformationService userDetailsInformationService;
-    private final JwtValidationFilter jwtValidationFilter;
     private final RSAKeyRecord rsaKeyRecord;
 
     @Bean
@@ -52,7 +49,6 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt ->
                         jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
-                .addFilterAfter(jwtValidationFilter, BearerTokenAuthenticationFilter.class)
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -123,4 +119,5 @@ public class SecurityConfig {
     public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(rsaKeyRecord.getRsaPublicKey()).build();
     }
+
 }
